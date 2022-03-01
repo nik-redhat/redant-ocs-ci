@@ -1,0 +1,271 @@
+---
+# This is the default configuration file which will be merged with file passed
+# by:
+#
+# * --ocsci-conf file.yaml parameter.
+#
+# Each section in this file will be available as an attribute of the
+# framework.config object.
+#
+# ------------------------------------------------------------------------
+
+# in this RUN section we will keep default parameters for run of OCS-CI
+RUN:
+  username: 'kubeadmin'
+  password_location: 'auth/kubeadmin-password'
+  log_dir: "/tmp"
+  run_id: null  # this will be redefined in the execution
+  kubeconfig_location: 'auth/kubeconfig' # relative from cluster_dir
+  cli_params: {}  # this will be filled with CLI parameters data
+  # If the client version ends with .nightly, the version will be exposed
+  # to the latest accepted OCP nightly build version
+  client_version: '4.10.0-0.nightly'
+  bin_dir: './bin'
+  google_api_secret: '~/.ocs-ci/google_api_secret.json'
+  # Following chrome params are for openshift console UI testing
+  force_chrome_branch_base: "665006"
+  force_chrome_branch_sha256sum: "a1ae2e0950828f991119825f62c24464ab3765aa219d150a94fb782a4c66a744"
+  chrome_binary_path: "/usr/bin/chromium-browser"
+  io_in_bg: False
+  io_load: 30
+  log_utilization: False
+  # This config file disables scale app pods to use OCS workers
+  use_ocs_worker_for_scale: False
+  load_status: None
+
+# In this section we are storing all deployment related configuration but not
+# the environment related data as those are defined in ENV_DATA section.
+DEPLOYMENT:
+  # OCP url download template can be overwritten by parameter ocp_url_template.
+  # We are exposing version, file_name and os_type. Example below:
+  # ocp_url_template: "https://openshift-release-artifacts.svc.ci.openshift.org/{version}/{file_name}-{os_type}-{version}.tar.gz"
+  # if the installer version ends with .nightly, the version will be exposed
+  # to the latest accepted OCP nightly build version. You can also use the
+  # specific build version like: "4.2.0-0.nightly-2019-08-06-195545"
+  installer_version: "4.10.0-0.nightly"
+  force_download_installer: True
+  force_download_client: True
+  skip_download_client: False
+  default_latest_tag: 'latest-stable-4.10'
+  # define if ceph is setup as external mode, default is false
+  external_mode: False
+  # You can overwrite csv channel version by following parameter
+  ocs_csv_channel: "stable-4.10"
+  # you can overwrite the image for ocs operator catalog source by following parameter:
+  # ocs_registry_image: "quay.io/rhceph-dev/ocs-olm-operator:4.2-32.9b6c93e.master"
+  default_ocs_registry_image: "quay.io/rhceph-dev/ocs-registry:latest-4.10"
+  ocs_operator_nodes_to_label: 3
+  # This is described as a WA for minimal configuration 3/3 worker/master
+  # nodes. See: https://github.com/openshift/ocs-operator
+  ocs_operator_nodes_to_taint: 0
+  ssh_key: "~/.ssh/openshift-dev.pub"
+  ssh_key_private: "~/.ssh/openshift-dev.pem"
+  force_deploy_multiple_clusters: False
+  # If you deploy for development purpose on cluster with lower then minimum
+  # requirements, the value of option below needs to be set to true.
+  allow_lower_instance_requirements: false
+  # For manual subscription plan (for manual approve of upgrade set bellow)
+  # subscription_plan_approval: "Manual"
+  # For UI deployment you have to set following parameter ui_deployment to True
+  # UI deployment is not part of this framework, it will just do preparation
+  # steps for openshift-console.
+  ui_deployment: False
+  # Following options are defaults for deployment from live content
+  live_deployment: False
+  preserve_bootstrap_node: False
+  # Terraform version
+  terraform_version: "0.12.26"
+  # Following options are defaults for deployment with infra worker nodes
+  infra_nodes: False
+  # How long should ocs-ci wait for `openshift-install create cluster` run?
+  openshift_install_timeout: 3600
+  # redhat-operators CatalogSource image (used for disconnected installation)
+  cs_redhat_operators_image: "registry.redhat.io/redhat/redhat-operator-index"
+  # Deployment with KMS (vault etc)
+  kms_deployment: False
+  # define if ceph is setup as arbiter/stretch cluster, default is false
+  arbiter_deployment: False
+  # Ceph in debug log level
+  ceph_debug: False
+  # Ignition version used for chrony
+  ignition_version: "3.2.0"
+  # Label all nodes with "dummy" zone labels? Assumes zone lables are missing.
+  dummy_zone_node_labels: False
+  # Network split setup. When enabled, network split scripts will be deployed
+  # on all master and worker nodes via MachineConfig during deployment.
+  # See also: https://mbukatov.gitlab.io/ocp-network-split/
+  network_split_setup: False
+  # Custom Ingress SSL certificate, key and CA certificate
+  ingress_ssl_cert: "data/ingress-cert.crt"
+  ingress_ssl_key: "data/ingress-cert.key"
+  ingress_ssl_ca_cert: "data/ca.crt"
+
+
+# Section for reporting configuration
+REPORTING:
+  email:
+    address: "ocs-ci@redhat.com"
+    smtp_server: "localhost"
+  polarion:
+    project_id: "OpenShiftContainerStorage"
+  # Upstream: 'US' or Downstream: 'DS', used only for reporting (Test Run Name)
+  us_ds: 'DS'
+  ocp_must_gather_image: "quay.io/openshift/origin-must-gather"
+  default_ocs_must_gather_image: "quay.io/rhceph-dev/ocs-must-gather"
+  overwrite_must_gather_image: true
+  ocs_live_must_gather_image: "registry.redhat.io/ocs4/ocs-must-gather-rhel8"
+  odf_live_must_gather_image: "registry.redhat.io/odf4/ocs-must-gather-rhel8"
+  default_ocs_must_gather_latest_tag: 'latest-4.10'
+  gather_on_deploy_failure: true
+  collect_logs_on_success_run: False
+  rp_client_log_level: "ERROR"
+
+# This is the default information about environment.
+ENV_DATA:
+  cluster_name: nladha-clustr  # will be changed in ocscilib plugin
+  storage_cluster_name: 'ocs-storagecluster'
+  storage_device_sets_name: "storageDeviceSets"
+  cluster_namespace: 'openshift-storage'
+  local_storage_namespace: 'openshift-local-storage'
+  monitoring_enabled: true
+  persistent-monitoring: true
+  platform: 'AWS'
+  deployment_type: 'ipi'
+  region: 'us-east-2'
+  base_domain: 'qe.rh-ocs.com'
+  master_instance_type: 'm4.xlarge'
+  worker_instance_type: 'm5.4xlarge'
+  master_replicas: 3
+  worker_replicas: 3
+  skip_ocp_deployment: false
+  skip_ocs_deployment: false
+  ocs_version: '4.10'
+  # uncomment to use custom directory for storing measurement data related to
+  # monitoring tests, otherwise generate temporary directory for each test run
+  # measurement_dir: '/tmp/ocs_ci_monitoring_measurement/'
+  # Default RHCOS image to be used for VmWare deployment
+  vm_template: 'rhcos-49.84.202110081407-0-vmware.x86_64'
+  # minimal write speed of fio as used in workload_fio_storageutilization
+  # fixtures, which is used to compute timeout of the write job (so that
+  # when actual write speed of the operation is smaller than this value, the
+  # workload fixture will fail on a timeout)
+  # the default value used here is based on observations on aws clusters
+  fio_storageutilization_min_mbps: 30.0
+  # terraform environment variables
+  TF_LOG_LEVEL: TRACE
+  TF_LOG_FILE: "terraform.log"
+  # The subnet prefix length to assign to each individual node.
+  # For example, if hostPrefix is set to 23, then each node is assigned a /23 subnet out of the given cidr,
+  # which allows for 510 (2^(32 - 23) - 2) pod IPs addresses.
+  # https://docs.openshift.com/container-platform/4.1/installing/installing_bare_metal/installing-bare-metal.html
+  cluster_host_prefix: 23
+  # use Flexy for OCP installation (not available for all platforms and
+  # deployment types)
+  flexy_deployment: False
+  # To enable rotational disk devices for LSO deployment we can set
+  # local_storage_allow_rotational_disks to true
+  local_storage_allow_rotational_disks: false
+  # Add node parameters
+  # The disk UUID on the VMs must be enabled, `disk.EnableUUID` value must be set to `True`.
+  # This step is necessary so that the VMDK always presents a consistent UUID
+  # to the VM, thus allowing the disk to be mounted properly.
+  disk_enable_uuid: 'TRUE'
+  # Encoding type for the ignition config
+  ignition_data_encoding: base64
+  # opm tool github owner and repository (used in api url for downloading opm tool)
+  opm_owner_repo: "operator-framework/operator-registry"
+  # opm tool release tag (particular version or "latest") to be downloaded
+  opm_release_tag: "latest"
+  # vault environment variables
+  vault_deploy_mode: external
+  KMS_PROVIDER: vault
+  KMS_SERVICE_NAME: vault
+  VAULT_CACERT: "ocs-kms-ca-secret"
+  VAULT_CLIENT_CERT: "ocs-kms-client-cert"
+  VAULT_CLIENT_KEY: "ocs-kms-client-key"
+  VAULT_SKIP_VERIFY: false
+  VAULT_BACKEND: "v1"
+  # enable console plugin
+  enable_console_plugin: true
+  # MCG only deployment
+  mcg_only_deployment: false
+  # RHEL VERSIONS:
+  # Once we will change this version to something which will not be supported on different
+  # OCP version, we need to make sure to put rhel_version to the all ocp related version config files
+  rhel_version: "7.9"
+  # This RHEL version will be used for running ansible playbook for adding RHEL nodes
+  rhel_version_for_ansible: 7
+  rhel7.9_worker_ami: 'ami-058a93d58c5797698'
+  rhel8.4_worker_ami: 'ami-074bab065c112399f'
+  cluster_type: ""
+
+  # ACM HUB deployment
+  deploy_acm_hub_cluster: false
+
+# This section is related to upgrade
+UPGRADE:
+  upgrade_to_latest: true
+  ocp_channel: "stable-4.10"
+  ocp_upgrade_path: "quay.io/openshift-release-dev/ocp-release"
+  ocp_arch: "x86_64"
+  upgrade_logging_channel: "4.10"
+
+# This section stores secret and uploaded from home dir or s3
+# for entry into this section, please email ecosystem team
+# or ping in ocs infra chat room.
+AUTH:
+  test_quay_auth: test_secret
+
+# This section is for FLEXY, any variable in this section will be copied into
+# flexy env file
+FLEXY:
+  LAUNCHER_VARS: {}
+  BUSHSLICER_CONFIG: {}
+
+# Defines the configuration of external Ceph Cluster
+EXTERNAL_MODE:
+  admin_keyring:
+    key: PLACE_HOLDER
+
+
+# This section is related to ui testing with selenium
+UI_SELENIUM:
+  browser_type: "chrome"
+  chrome_type: "google-chrome"
+  headless: True
+  screenshot: True
+  ignore_ssl: True
+
+# This section is related to performance tests which need Elasticsearch server
+PERF:
+  # deploy new ES (elastic-search) server in the tested cluster
+  deploy_internal_es: true
+  # use in the tests this ES IP and Port - in case of deploy_internal_es: false
+  internal_es_server: ""
+  internal_es_port: 9200
+  # There is a Production ES for long term results saving
+  production_es: true
+  # The Production (long term results saving) ES information:  IP / Port
+  production_es_server: "10.0.78.167"
+  production_es_port: 9200
+  # There is a Lab ES for development testing - combine with --dev-mode argument
+  dev_lab_es: true
+  # The Dev. Lab ES information:  IP / Port
+  dev_es_server: "10.0.144.103"
+  dev_es_port: 9200
+  dashboard_cred: "data/perfdash"
+
+# Specific component to be enabled/disabled
+# like RGW, NOOBAA, CephFS, RBD
+COMPONENTS:
+  disable_rgw: False
+  disable_noobaa: False
+  disable_cephfs: False
+  disable_blockpools: False
+
+# All Multicluster stuff here
+MULTICLUSTER:
+  # Index of this cluster Config in a list of cluster Configs
+  multicluster_index: 0
+  acm_cluster: False
+  primary_cluster: False

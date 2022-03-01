@@ -1,0 +1,33 @@
+Redant Maintainers
+=====================
+
+The intention of this file is not to establish who owns what parts of the
+code base, but to provide a set of names that developers can consult when they
+have a question about a particular subset and also to provide a set of names
+to be CC'd when submitting a patch to obtain appropriate review.
+
+In general, if you have a question about inclusion of a patch, you should
+consult any of the active developers in the github discussions or issues.
+
+Descriptions of section entries:
+
+	M: Main contact that knows and takes care of this area
+        P: Peer for a component
+
+Architecture & POC:
+------------------
+Barak Sason Rofman <sason922@gmail.com>
+
+Dev Team:
+---------
+M: Srijan Sivakumar <sivakumarsrijan@gmail.com>
+M: Nikhil Ladha <nladha@redhat.com>
+P: Ayush Ujjwal <ujjwal.msrit@gmail.com>
+
+Special Thanks
+--------------
+
+Redant would not be possible without the contributions of:
+Barak Sason Rofman <sason922@gmail.com>
+Nishith Vihar Sakinala <nsakinal@redhat.com>
+Neeraj Pratap Singh <neesingh@redhat.com>
