@@ -6,7 +6,6 @@
 from .rexe import Rexe
 from .relog import Logger
 from .utils import Utils
-from .abstract_ops import AbstractOps
 
 
 class RedantMixin(Utils, AbstractOps, Rexe, Logger):

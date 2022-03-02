@@ -7,7 +7,7 @@ import paramiko
 from halo import Halo
 from shutil import which
 sys.path.insert(1, ".")
-from common.mixin import RedantMixin
+from utility.mixin import RedantMixin
 
 
 class Environ:
@@ -25,6 +25,7 @@ class Environ:
         self.spinner = Halo(spinner='dots')
         self.redant = RedantMixin(es, [True])
         self.redant.init_logger("environ", log_path, log_level)
+        self.config = param_obj.get_config_hashmap()
 
     def get_framework_logger(self):
         """
@@ -52,7 +53,7 @@ class Environ:
         if not which("oc"):
             self.redant.get_openshift_client()
         try:
-            self.redant.check_cluster_info("oc cluster-info")
+            self.redant.exec_cmd("oc cluster-info")
         except CommandFailed as ex:
             print("Cluster is not ready to use: %s", ex)
             return False
@@ -65,7 +66,9 @@ class Environ:
         """
         # invoke the hard reset or hard terminate.
         self.spinner.start("Setting up environment")
-        set_kubeconfig(kubeconfig_path)
+        self.redant.set_kubeconfig(kubeconfig_path)
+        self.redant.log_ocs_version()
+        self.redant.deploy_cluster()
         try:
             self.redant.start_glusterd(self.server_list)
             self.redant.create_cluster(self.server_list)

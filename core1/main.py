@@ -13,10 +13,10 @@ import argparse
 import pyfiglet
 from halo import Halo
 from environ import Environ, FrameworkEnv
-import ParamsHandler
+from params_handler import ParamsHandler
 # from test_runner import TestRunner
 # from result_handler import handle_results
-from common.relog import Logger
+from utility.relog import Logger
 sys.path.insert(1, ".")
 sys.path.insert(1, "./common")
 
@@ -128,22 +128,22 @@ def main():
     env_set.setup_env(os.path.join(cluster_path,
                       param_obj.run_config["kubeconfig_location"]))
 
-    # invoke the test_runner.
-    logger_obj.debug("Running the test cases.")
-    TestRunner.init(TestListBuilder, param_obj, env_set, log_dir_current,
-                    args.log_level, args.concur_count, spec_test)
-    result_queue = TestRunner.run_tests(env_obj)
-    logger_obj.debug("Collected test results queue.")
+    # # invoke the test_runner.
+    # logger_obj.debug("Running the test cases.")
+    # TestRunner.init(TestListBuilder, param_obj, env_set, log_dir_current,
+    #                 args.log_level, args.concur_count, spec_test)
+    # result_queue = TestRunner.run_tests(env_obj)
+    # logger_obj.debug("Collected test results queue.")
 
-    # Environment cleanup. TBD.
-    total_time = time.time() - start
+    # # Environment cleanup. TBD.
+    # total_time = time.time() - start
 
-    # Setup the result
-    if args.excel_sheet is None:
-        handle_results(result_queue, total_time, logger_obj)
-    else:
-        handle_results(result_queue, total_time, logger_obj,
-                       args.excel_sheet)
+    # # Setup the result
+    # if args.excel_sheet is None:
+    #     handle_results(result_queue, total_time, logger_obj)
+    # else:
+    #     handle_results(result_queue, total_time, logger_obj,
+    #                    args.excel_sheet)
 
     logger_obj.debug("Starting env teardown.")
     env_set.teardown_env()
